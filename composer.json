@@ -1,0 +1,24 @@
+{
+  "name": "conta/library",
+  "description": "a common Luna's library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ivan shumakov",
+      "email": "ivan.shumakov@gmail.com",
+      "homepage": "https://github.com/shumiv/"
+    }
+  ],
+  "require": {
+    "php": ">=7.4.2",
+    "ext-json": "*",
+    "mesilov/bitrix24-php-sdk": ">=0.7.0",
+    "guzzlehttp/guzzle": "~6.0"
+
+  },
+  "autoload": {
+    "psr-4": {
+      "conta\\": "src/"
+    }
+  }
+}
