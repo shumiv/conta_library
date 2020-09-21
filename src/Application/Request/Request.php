@@ -9,15 +9,11 @@ abstract class Request
 
     const DEFAULT_COMMAND = "Default";
 
+    public Feedback $feedback;
+
     protected Registry $registry;
 
     protected array $properties;
-
-    protected array $warnings = [];
-
-    protected array $errors = [];
-
-    protected array $messages = [];
 
     protected array $commands = [self::DEFAULT_COMMAND];
 
@@ -30,6 +26,7 @@ abstract class Request
 
     public function __construct()
     {
+        $this->feedback = new Feedback(static::SEPARATOR);
         $this->registry = Registry::instance();
         $this->init();
     }
@@ -59,66 +56,6 @@ abstract class Request
     public function setProperty(string $key, $value): void
     {
         $this->properties[$key] = $value;
-    }
-
-    public function addWarning(string $message): void
-    {
-        array_push($this->warnings, $message);
-    }
-
-    public function getWarnings(): array
-    {
-        return $this->warnings;
-    }
-
-    public function getWarningsString(string $separator = "\n"): string
-    {
-        return implode($separator, $this->warnings);
-    }
-
-    public function clearWarnings(): void
-    {
-        $this->warnings = [];
-    }
-
-    public function addError(string $message): void
-    {
-        array_push($this->errors, $message);
-    }
-
-    public function getErrors(): array
-    {
-        return $this->errors;
-    }
-
-    public function getErrorsString(string $separator = "\n"): string
-    {
-        return implode($separator, $this->errors);
-    }
-
-    public function cleanErrors(): void
-    {
-        $this->errors = [];
-    }
-
-    public function addMessage(string $message): void
-    {
-        array_push($this->messages, $message);
-    }
-
-    public function getMessages(): array
-    {
-        return $this->messages;
-    }
-
-    public function getMessagesString(string $separator = "\n"): string
-    {
-        return implode($separator, $this->messages);
-    }
-
-    public function cleanMessages(): void
-    {
-        $this->messages = [];
     }
 
     /**
@@ -152,6 +89,8 @@ abstract class Request
     protected function composeCommands(string $path): array
     {
         $config = $this->registry->getConfig();
+        var_dump($_SERVER['DOCUMENT_ROOT']);
+        var_dump(getcwd());
         $projectRoot = $config->get('projectRoot');
         $trimmedRoot = str_replace($projectRoot, "", $path);
         $trimmedGet = $this->trimGet($trimmedRoot);
