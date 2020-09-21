@@ -83,16 +83,14 @@ abstract class Request
     }
 
     /**
-     * @param string $path
+     * @param string $uri
      * @return string[]
      */
-    protected function composeCommands(string $path): array
+    protected function composeCommands(string $uri): array
     {
         $config = $this->registry->getConfig();
-        var_dump($_SERVER['DOCUMENT_ROOT']);
-        var_dump(getcwd());
         $projectRoot = $config->get('projectRoot');
-        $trimmedRoot = str_replace($projectRoot, "", $path);
+        $trimmedRoot = str_replace($projectRoot, "", $uri);
         $trimmedGet = $this->trimGet($trimmedRoot);
         return $this->explodeCommands($trimmedGet);
     }

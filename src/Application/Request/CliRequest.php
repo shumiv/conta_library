@@ -8,7 +8,7 @@ class CliRequest extends Request
         $args = $_SERVER['argv'];
 
         foreach ($args as $arg) {
-            if (preg_match("/^path:(.+)/", $arg, $matches)) {
+            if (preg_match("/^commands:(.+)/", $arg, $matches)) {
                 $this->commands = $this->composeCommands($matches[1]);
             } else {
                 if (strpos($arg, '=')) {
