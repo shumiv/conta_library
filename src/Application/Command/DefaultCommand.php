@@ -7,7 +7,7 @@ class DefaultCommand extends Command
 {
     protected function doExecute(Request $request): void
     {
-        $request->feedback->addMessage('Default command');
+        $request->feedback->addNotice('Default command');
         print $request->feedback->getFeedbackString();
     }
 }

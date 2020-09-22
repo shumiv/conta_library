@@ -12,7 +12,11 @@ abstract class Command
 
     public function execute(Request $request): void
     {
-        $this->doExecute($request);
+        try {
+            $this->doExecute($request);
+        } catch (\Throwable $throwable) {
+            $request->feedback->addError($throwable->getMessage());
+        }
     }
 
     abstract protected function doExecute(Request $request): void;

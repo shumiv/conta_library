@@ -2,6 +2,7 @@
 namespace conta\Application\Request;
 
 use conta\Application\Registry;
+use conta\Application\Feedback\Feedback;
 
 abstract class Request
 {
