@@ -9,7 +9,11 @@ class Entry
 
     private array $context;
 
-    public function __construct(string $message, int $type, array $context = [])
+    public function __construct(
+        string $message,
+        int $type,
+        array $context = []
+    )
     {
         $this->message = $message;
         $this->type = $type;
