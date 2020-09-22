@@ -5,12 +5,6 @@ use Monolog\Logger;
 
 class Feedback
 {
-    const ERROR = 'errors';
-
-    const WARNING = 'warnings';
-
-    const MESSAGE = 'messages';
-
     private string $separator;
 
     /**
