@@ -1,8 +1,10 @@
 <?php
 namespace conta\Application\Request;
 
+use Bitrix24\Bitrix24;
 use conta\Application\Registry;
 use conta\Application\Feedback\Feedback;
+use conta\Database\Database;
 
 abstract class Request
 {
@@ -17,6 +19,8 @@ abstract class Request
     protected array $properties;
 
     protected array $commands = [self::DEFAULT_COMMAND];
+
+    protected \PDO $lunaPdo;
 
     public static function makeRequest(): self
     {
@@ -33,6 +37,32 @@ abstract class Request
     }
 
     abstract public function init(): void;
+
+    public function getLunaPdo(): \PDO
+    {
+        $this->lunaPdo ??= $this->initializeLunaPdo();
+        return $this->lunaPdo;
+    }
+
+    public function getB24(): Bitrix24
+    {
+        define('APP_ID', 'local.5d9db825b129a0.40155270'); // take it from Bitrix24 after adding a new application
+        define('APP_SECRET_CODE', 'l4l8beXJl3hXpo4alku5NWXWc9w8j3dfeEqB4u9yhvE0dvF6wR'); // take it from Bitrix24 after adding a new application
+        define('APP_REG_URL', 'https://luna.zemser.ru/front/arm/'); // the same URL you should set when adding a new application in Bitrix24
+        define('DOMAIN', 'bitrix.zemser.ru');
+        define(
+            'TOKEN_PARAMETERS_ARRAY' ,
+            [
+                'domain' => DOMAIN,
+                'appId' => APP_ID,
+                'appSecretCode' => APP_SECRET_CODE,
+                'appRegUrl' => APP_REG_URL
+            ]
+        );
+        $database = new Database($this->getLunaPdo());
+        $appData = new \conta\B24RestApi\AppData\AppData();
+        return \conta\B24RestApi\Bitrix24Factory\Bitrix24Factory::make($appData, $database, APP_REG_URL);
+    }
 
     public function getCommands(): array
     {
@@ -136,5 +166,15 @@ abstract class Request
             $pascalCase .= ucfirst($word);
         }
         return $pascalCase;
+    }
+
+    private function initializeLunaPdo(): \PDO
+    {
+        require_once "C:/secure/luna_db_data.php";
+        try {
+            return new \PDO($luna_db_dsn, $luna_db_username, $luna_db_password);
+        } catch(\PDOException $e) {
+            echo 'Error: ' . $e->getMessage() . '<br>';
+        }
     }
 }
