@@ -1,6 +1,7 @@
 <?php
 namespace conta\B24\Domain;
 
+use Bitrix24\Departments\Department;
 use conta\Collection\Collection;
 
 
@@ -17,5 +18,13 @@ class DomainCollection extends Collection
         foreach ($this->collection as $domain) {
             $domain->pushUpdate();
         }
+    }
+
+    public function getViews(): array
+    {
+        return array_map(
+            fn($domain) => $domain->getView(),
+            $this->collection
+        );
     }
 }

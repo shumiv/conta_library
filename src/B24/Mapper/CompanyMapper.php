@@ -23,6 +23,16 @@ class CompanyMapper extends Mapper
         $this->transitionMapper = new TransitionMapper($pdo);
     }
 
+    public function getListByTitleIds(IdCollection $ids): DomainCollection
+    {
+        if ($ids->isEmpty()) {
+            return new DomainCollection();
+        }
+        $params = $this->composeGetByTitleSnippetParams($ids->getAll());
+        $companies = $this->batch->execute(static::GET_LIST, $params);
+        return $this->pickMatchedCompanies($companies, $ids);
+    }
+
     public function update(Domain $domain): void
     {
         $params = $this->composeUpdateParams($domain);
@@ -31,7 +41,7 @@ class CompanyMapper extends Mapper
 
     public function findAllByTitleId(IdCollection $titleIds): DomainCollection
     {
-        $companies = $this->transitionMapper->findCompanies($titleIds);
+        $companies = $this->transitionMapper->findFullCompanies($titleIds);
         $ids = $this->composeIds($companies);
         return $this->findAllById($ids);
     }
@@ -84,5 +94,47 @@ class CompanyMapper extends Mapper
             $ids->add($company->getB24Id());
         }
         return $ids;
+    }
+
+    private function composeGetByTitleSnippetParams(array $snippets): array
+    {
+        return [
+            "order" => ["asc" => "ID"],
+            "filter" => ["%TITLE" => $snippets],
+            "select" => ["ID", "TITLE", EdoField::NAME/*...$this->getFieldsNames()*/],
+        ];
+    }
+
+    private function pickMatchedCompanies(
+        array $companies,
+        IdCollection $ids
+    ): DomainCollection
+    {
+        $matchedCompanies = array_filter(
+            $companies,
+            fn($company) => $this->isTitleMatch($company, $ids)
+        );
+        return $this->createObjects($matchedCompanies);
+    }
+
+    private function isTitleMatch(array $company, IdCollection $ids): bool
+    {
+        $titleId = $this->getTitleId($company['TITLE']);
+        if ($titleId === -1) {
+            return false;
+        }
+        return $ids->contains($titleId);
+    }
+
+    /**
+     * @param string $title
+     * @return int -1 if there is no title id
+     */
+    private function getTitleId(string $title): int
+    {
+        $trimmedTitle = trim($title);
+        $severalIntegersInTheEnd = '/\d+$/';
+        preg_match($severalIntegersInTheEnd, $trimmedTitle, $matches);
+        return $matches[0] ?? -1;
     }
 }

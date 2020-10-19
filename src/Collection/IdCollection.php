@@ -26,4 +26,9 @@ class IdCollection extends Collection
         }
         array_push($this->collection, $id);
     }
+
+    public function contains(int $id): bool
+    {
+        return in_array($id, $this->collection);
+    }
 }

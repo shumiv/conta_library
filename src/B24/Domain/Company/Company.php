@@ -12,6 +12,7 @@ class Company extends Domain
 
     /** @var int -1 if there is no title id */
     private int $titleId;
+    private int $transitionId;
 
     public function __construct(array $settings, CompanyMapper $mapper)
     {
@@ -41,6 +42,26 @@ class Company extends Domain
         return $this->titleId;
     }
 
+    public function getTransitionId(): ?int
+    {
+        return $this->transitionId ?? null;
+    }
+
+    public function setTransitionId(int $transitionId): void
+    {
+        $this->transitionId = $transitionId;
+    }
+
+    public function pushUpdate(): void
+    {
+        $this->mapper->update($this);
+    }
+
+    public function isNull(): bool
+    {
+        return $this->title === "";
+    }
+
     private function findTitleId(string $title): int
     {
         preg_match("/\d+$/", $title, $match);
@@ -54,15 +75,5 @@ class Company extends Domain
         $edo = new EdoField();
         $edo->setSelectedOptions($edoSettings);
         return $edo;
-    }
-
-    public function pushUpdate(): void
-    {
-        $this->mapper->update($this);
-    }
-
-    public function isNull(): bool
-    {
-        return $this->title === "";
     }
 }

@@ -8,6 +8,11 @@ abstract class Collection implements \Iterator
 
     protected int $pointer = 0;
 
+    public function isEmpty(): bool
+    {
+        return empty($this->collection);
+    }
+
     public function current()
     {
         return $this->collection[$this->pointer];
