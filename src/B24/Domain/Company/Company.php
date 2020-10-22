@@ -32,6 +32,20 @@ class Company extends Domain
         $this->edo->markOptionSelected($option);
     }
 
+    public function removeEdo(string $option): void
+    {
+        $this->edo->markOptionNotSelected($option);
+    }
+
+    public function updateEdo(string $status, string $company): void
+    {
+        if ($status === 'Принято') {
+            $this->addEdo($company);
+        } elseif ($status === 'Отклонено') {
+            $this->removeEdo($company);
+        }
+    }
+
     public function resetEdo(): void
     {
         $this->edo->resetSelectedOptions();
@@ -62,6 +76,11 @@ class Company extends Domain
         return $this->title === "";
     }
 
+    public function getAssocKey(): int
+    {
+        return $this->getTitleId();
+    }
+
     private function findTitleId(string $title): int
     {
         preg_match("/\d+$/", $title, $match);
@@ -72,8 +91,7 @@ class Company extends Domain
     {
         $edoSettings = $settings[EdoField::NAME];
         $edoSettings = $edoSettings ? $edoSettings : [];
-        $edo = new EdoField();
-        $edo->setSelectedOptions($edoSettings);
+        $edo = new EdoField($edoSettings);
         return $edo;
     }
 }

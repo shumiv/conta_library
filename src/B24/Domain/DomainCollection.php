@@ -27,4 +27,20 @@ class DomainCollection extends Collection
             $this->collection
         );
     }
+
+    /**
+     * @return Domain[]
+     */
+    public function getAsAssoc(): array
+    {
+        $assoc = [];
+        /** @var Domain $domain */
+        foreach ($this->collection as $domain) {
+            if ($domain->isNull()) {
+                continue;
+            }
+            $assoc[$domain->getAssocKey()] = $domain;
+        }
+        return $assoc;
+    }
 }

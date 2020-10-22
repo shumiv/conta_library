@@ -33,6 +33,13 @@ abstract class Domain
         return $fields;
     }
 
+    /**
+     * @return string|int to use as key for an associative array
+     */
+    abstract public function getAssocKey();
+
+    abstract public function isNull(): bool;
+
     abstract public function getView(): string;
 
     abstract public function pushUpdate(): void;
