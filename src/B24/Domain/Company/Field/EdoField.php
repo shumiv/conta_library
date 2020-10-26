@@ -7,7 +7,7 @@ class EdoField extends PluralField
 {
     const NAME = "UF_CRM_1594888675";
 
-    public function __construct()
+    public function __construct(array $options = [])
     {
         $this->optionsMap = [
             "ФИРМА ЗЕМЛЯ - СЕРВИС ООО" => "4830", //ФЗС
@@ -16,5 +16,6 @@ class EdoField extends PluralField
             "К+Калуга" => "4833", //КПК
             "КОМПАНИЯ" => "4838", //КЗС
         ];
+        parent::__construct($options);
     }
 }

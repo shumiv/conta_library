@@ -13,8 +13,8 @@ abstract class Domain
 
     public function __construct(array $settings, Mapper $mapper)
     {
-        $this->id = $settings['ID'];
         $this->mapper = $mapper;
+        $this->id = $settings['ID'] ?? -1;
     }
 
     public function getId(): int
@@ -31,6 +31,15 @@ abstract class Domain
             }
         }
         return $fields;
+    }
+
+    public function create(): void
+    {
+        if ($this->id !== -1) {
+            $message = 'there is the id. The task exists already';
+            throw new \Exception($message);
+        }
+        $this->mapper->create($this);
     }
 
     /**

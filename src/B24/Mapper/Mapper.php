@@ -53,6 +53,8 @@ abstract class Mapper
         return $companies;
     }
 
+    abstract public function create(Domain $object): void;
+
     abstract public function update(Domain $object): void;
 
     abstract protected function doCreateObject(array $fields): Domain;

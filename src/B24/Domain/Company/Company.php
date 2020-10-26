@@ -3,12 +3,14 @@ namespace conta\B24\Domain\Company;
 
 use conta\B24\Domain\Company\Field\EdoField;
 use conta\B24\Domain\Domain;
+use conta\B24\Domain\Field\FieldCollection;
 use conta\B24\Mapper\CompanyMapper;
 
 class Company extends Domain
 {
     private string $title;
     protected EdoField $edo;
+    protected int $responsibleId;
 
     /** @var int -1 if there is no title id */
     private int $titleId;
@@ -17,6 +19,7 @@ class Company extends Domain
     public function __construct(array $settings, CompanyMapper $mapper)
     {
         $this->title = $settings['TITLE'] ?? "";
+        $this->responsibleId = $settings['ASSIGNED_BY_ID'] ?? -1;
         $this->titleId = $this->findTitleId($this->title);
         $this->edo = $this->composeEdoField($settings);
         parent::__construct($settings, $mapper);
@@ -25,6 +28,11 @@ class Company extends Domain
     public function getView(): string
     {
         return $this->title;
+    }
+
+    public function getEdo(): EdoField
+    {
+        return $this->edo;
     }
 
     public function addEdo(string $option): void
@@ -79,6 +87,11 @@ class Company extends Domain
     public function getAssocKey(): int
     {
         return $this->getTitleId();
+    }
+
+    public function getResponsibleId(): int
+    {
+        return $this->responsibleId;
     }
 
     private function findTitleId(string $title): int

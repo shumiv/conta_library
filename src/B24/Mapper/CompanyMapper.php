@@ -33,9 +33,17 @@ class CompanyMapper extends Mapper
         return $this->pickMatchedCompanies($companies, $ids);
     }
 
+    public function create(Domain $object): void
+    {
+        throw new \Exception('Should implement create method');
+    }
+
     public function update(Domain $domain): void
     {
         $params = $this->composeUpdateParams($domain);
+        if (empty($params['fields'])) {
+            return;
+        }
         $this->b24->call(static::UPDATE, $params);
     }
 
@@ -56,7 +64,11 @@ class CompanyMapper extends Mapper
         return [
             "order" => ["asc" => "ID"],
             "filter" => ["ID" => $ids],
-            "select" => ["ID", "TITLE", EdoField::NAME/*...$this->getFieldsNames()*/],
+            "select" => [
+                "ID",
+                "TITLE",
+                "ASSIGNED_BY_ID",
+                EdoField::NAME/*...$this->getFieldsNames()*/],
         ];
     }
 
