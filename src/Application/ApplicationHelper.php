@@ -5,7 +5,7 @@ use conta\Application\Request\Request;
 
 class ApplicationHelper
 {
-    private string $config = "C:/www/luna/sync_manager/config.ini";
+    private string $config = "./config.ini";
 
     private Registry $registry;
 
