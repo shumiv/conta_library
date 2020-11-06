@@ -113,7 +113,12 @@ class CompanyMapper extends Mapper
         return [
             "order" => ["asc" => "ID"],
             "filter" => ["%TITLE" => $snippets],
-            "select" => ["ID", "TITLE", EdoField::NAME/*...$this->getFieldsNames()*/],
+            "select" => [
+                "ID",
+                "TITLE",
+                "ASSIGNED_BY_ID",
+                EdoField::NAME/*...$this->getFieldsNames()*/,
+            ],
         ];
     }
 
