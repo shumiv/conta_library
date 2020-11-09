@@ -2,6 +2,7 @@
 namespace conta\Transition;
 
 use conta\Collection\IdCollection;
+use conta\Transition\Module;
 
 class TransitionMapper
 {
@@ -26,6 +27,14 @@ class TransitionMapper
     {
         $statement = $this->findFullCompaniesStatement($titleIds);
         return $this->extractCompanies($statement);
+    }
+
+    public function findModulesSettings(
+        IdCollection $moduleIds
+    ): ModuleSettingCollection
+    {
+        $statement = $this->findModulesSettingsStatement($moduleIds);
+        return $this->extractModulesSettings($statement);
     }
 
     /**
@@ -79,6 +88,28 @@ class TransitionMapper
         $collection = new CompanyCollection();
         foreach ($companies as $company) {
             $collection->add(new Company($company));
+        }
+        return $collection;
+    }
+
+    private function findModulesSettingsStatement(
+        IdCollection $moduleIds
+    ): \PDOStatement
+    {
+        $query = "SELECT * FROM mdk_entity WHERE id IN ("
+            . implode(", ", $moduleIds->getAll()) . ")";
+        return $this->pdo->prepare($query);
+    }
+
+    private function extractModulesSettings(
+        \PDOStatement $statement
+    ): ModuleSettingCollection
+    {
+        $statement->execute();
+        $settings = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        $collection = new ModuleSettingCollection();
+        foreach ($settings as $setting) {
+            $collection->add(new ModuleSetting($setting));
         }
         return $collection;
     }

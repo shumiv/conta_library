@@ -22,6 +22,8 @@ abstract class Request
 
     protected \PDO $lunaPdo;
 
+    protected string $projectRoot;
+
     public static function makeRequest(): self
     {
         return isset($_SERVER['REQUEST_METHOD'])
@@ -111,6 +113,16 @@ abstract class Request
             $separator = static::SEPARATOR;
         }
         return implode($separator, $this->getFeedback());
+    }
+
+    public function setProjectRoot(string $projectRoot): void
+    {
+        $this->projectRoot = $projectRoot;
+    }
+
+    public function getProjectRoot(): string
+    {
+        return $this->projectRoot;
     }
 
     /**

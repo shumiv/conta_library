@@ -33,6 +33,8 @@ class Controller
         $request = $this->registry->getRequest();
         $resolver = new CommandResolver();
         $command = $resolver->getCommand($request);
+        $root = 'C:/www' . $this->registry->getConfig()->get('projectRoot');
+        $request->setProjectRoot($root);
         $command->execute($request);
         $this->log($request);
     }
