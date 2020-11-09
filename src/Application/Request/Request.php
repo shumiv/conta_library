@@ -48,22 +48,11 @@ abstract class Request
 
     public function getB24(): Bitrix24
     {
-        define('APP_ID', 'local.5d9db825b129a0.40155270'); // take it from Bitrix24 after adding a new application
-        define('APP_SECRET_CODE', 'l4l8beXJl3hXpo4alku5NWXWc9w8j3dfeEqB4u9yhvE0dvF6wR'); // take it from Bitrix24 after adding a new application
-        define('APP_REG_URL', 'https://luna.zemser.ru/front/arm/'); // the same URL you should set when adding a new application in Bitrix24
-        define('DOMAIN', 'bitrix.zemser.ru');
-        define(
-            'TOKEN_PARAMETERS_ARRAY' ,
-            [
-                'domain' => DOMAIN,
-                'appId' => APP_ID,
-                'appSecretCode' => APP_SECRET_CODE,
-                'appRegUrl' => APP_REG_URL
-            ]
-        );
+        include_once "b24_restapi_const.php";
         $database = new Database($this->getLunaPdo());
         $appData = new \conta\B24RestApi\AppData\AppData();
-        return \conta\B24RestApi\Bitrix24Factory\Bitrix24Factory::make($appData, $database, APP_REG_URL);
+        return \conta\B24RestApi\Bitrix24Factory\Bitrix24Factory
+            ::make($appData, $database, APP_REG_URL);
     }
 
     public function getCommands(): array
