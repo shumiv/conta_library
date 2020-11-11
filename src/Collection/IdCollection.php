@@ -16,6 +16,13 @@ class IdCollection extends Collection
         }
     }
 
+    public function merge(IdCollection $ids): void
+    {
+        foreach ($ids as $id) {
+            $this->add($id);
+        }
+    }
+
     public function add(int $id): void
     {
         if ($id <= 0) {

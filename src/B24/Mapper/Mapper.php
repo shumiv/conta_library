@@ -21,8 +21,8 @@ abstract class Mapper
 
     public function findAllById(IdCollection $ids): DomainCollection
     {
-        if (count($ids->getAll()) === 0) {
-            return new DomainCollection();
+        if ($ids->isEmpty()) {
+            return $this->getEmptyCollection();
         }
         $params = $this->composeParams($ids->getAll());
         $entityData = $this->getList($params);
@@ -39,18 +39,23 @@ abstract class Mapper
         return $this->doCreateObject($fields);
     }
 
-    private function getList(array $params): array
+    protected function getEmptyCollection(): DomainCollection
+    {
+        return new DomainCollection();
+    }
+
+    protected function getList(array $params): array
     {
         return $this->batch->execute(static::GET_LIST, $params);
     }
 
     private function doCreateObjects(array $entities): DomainCollection
     {
-        $companies = new DomainCollection();
+        $collection = $this->getEmptyCollection();
         foreach ($entities as $fields) {
-            $companies->add($this->CreateObject($fields));
+            $collection->add($this->CreateObject($fields));
         }
-        return $companies;
+        return $collection;
     }
 
     abstract public function create(Domain $object): void;

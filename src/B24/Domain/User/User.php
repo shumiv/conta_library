@@ -12,6 +12,8 @@ class User extends Domain
     private string $name;
     private string $secondName;
     private string $lastName;
+    private string $photoHref;
+    private string $view;
     private int $departmentId;
     private int $supervisorId;
 
@@ -20,7 +22,9 @@ class User extends Domain
         $this->name = $settings['NAME'] ?? "";
         $this->secondName = $settings['SECOND_NAME'] ?? "";
         $this->lastName = $settings['LAST_NAME'] ?? "";
+        $this->photoHref = $settings['PERSONAL_PHOTO'] ?? "";
         $this->departmentId = $settings['UF_DEPARTMENT'][0] ?? -1;
+        $this->view = $this->getFullName();
         parent::__construct($settings, $mapper);
     }
 
@@ -39,7 +43,7 @@ class User extends Domain
 
     public function getView(): string
     {
-        return $this->getFullName();
+        return $this->view;
     }
 
     public function pushUpdate(): void
@@ -60,5 +64,19 @@ class User extends Domain
     public function getDepartmentId(): int
     {
         return $this->departmentId;
+    }
+
+    public function getPhotoHref(): string
+    {
+        return $this->photoHref;
+    }
+
+    public function getViewParams(): array
+    {
+        return [
+            'id' => $this->id,
+            'view' => $this->view,
+            'photoHref' => $this->photoHref,
+        ];
     }
 }

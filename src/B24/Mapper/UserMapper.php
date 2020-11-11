@@ -2,7 +2,9 @@
 namespace conta\B24\Mapper;
 
 use conta\B24\Domain\Domain;
+use conta\B24\Domain\DomainCollection;
 use conta\B24\Domain\User\User;
+use conta\Collection\IdCollection;
 
 class UserMapper extends Mapper
 {
@@ -18,6 +20,18 @@ class UserMapper extends Mapper
         throw new \Exception('should implement update method');
     }
 
+    public function findAllByDepartments(
+        IdCollection $departmentIds
+    ): DomainCollection
+    {
+        if ($departmentIds->isEmpty()) {
+            return $this->getEmptyCollection();
+        }
+        $params = $this->composeByDepartmentsParams($departmentIds->getAll());
+        $entityData = $this->getList($params);
+        return $this->createObjects($entityData);
+    }
+
     protected function doCreateObject(array $fields): Domain
     {
         return new User($fields, $this);
@@ -26,5 +40,17 @@ class UserMapper extends Mapper
     protected function composeParams(array $ids): array
     {
         return ['ID' => $ids];
+    }
+
+    /**
+     * @param int[] $ids
+     * @return array
+     */
+    protected function composeByDepartmentsParams(array $ids): array
+    {
+        return [
+            'UF_DEPARTMENT' => $ids,
+            'ACTIVE' => true,
+        ];
     }
 }

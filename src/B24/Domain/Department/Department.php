@@ -3,6 +3,7 @@ namespace conta\B24\Domain\Department;
 
 use conta\B24\Domain\Domain;
 use conta\B24\Mapper\Mapper;
+use conta\Collection\IdCollection;
 
 class Department extends Domain
 {

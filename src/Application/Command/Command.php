@@ -15,7 +15,7 @@ abstract class Command
         try {
             $this->doExecute($request);
         } catch (\Throwable $throwable) {
-            $request->feedback->addError($throwable->getMessage());
+            $request->feedback->addError($throwable);
         }
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace conta\B24\Mapper;
 
+use conta\B24\Domain\DepartmentCollection;
 use conta\B24\Domain\Domain;
 use conta\B24\Domain\Department\Department;
 
@@ -26,5 +27,10 @@ class DepartmentMapper extends Mapper
     protected function composeParams(array $ids): array
     {
         return ['ID' => $ids];
+    }
+
+    protected function getEmptyCollection(): DepartmentCollection
+    {
+        return new DepartmentCollection();
     }
 }

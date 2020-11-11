@@ -43,4 +43,17 @@ class DomainCollection extends Collection
         }
         return $assoc;
     }
+
+    public function getViewParams(): array
+    {
+        $params = [];
+        /** @var Domain $domain */
+        foreach ($this->collection as $domain) {
+            if ($domain->isNull()) {
+                continue;
+            }
+            $assoc[] = $domain->getViewParams();
+        }
+        return $assoc;
+    }
 }
