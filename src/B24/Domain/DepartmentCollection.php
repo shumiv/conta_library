@@ -6,12 +6,12 @@ use conta\Collection\IdCollection;
 
 class DepartmentCollection extends DomainCollection
 {
-    public function getManagersIds(): IdCollection
+    public function getSupervisorsIds(): IdCollection
     {
         $ids = new IdCollection();
         /** @var Department $department */
         foreach ($this->collection as $department) {
-            $ids->merge($department->getManagersIds());
+            $ids->add($department->getSupervisorId());
         }
         return $ids;
     }

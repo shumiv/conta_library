@@ -24,6 +24,14 @@ abstract class Request
 
     protected string $projectRoot;
 
+    protected string $appSecretCode;
+
+    private string $appId;
+
+    private string $appRegUrl;
+
+    private string $domain;
+
     public static function makeRequest(): self
     {
         return isset($_SERVER['REQUEST_METHOD'])
@@ -35,6 +43,7 @@ abstract class Request
     {
         $this->feedback = new Feedback(static::SEPARATOR);
         $this->registry = Registry::instance();
+        $this->setB24Setting();
         $this->init();
     }
 
@@ -48,11 +57,10 @@ abstract class Request
 
     public function getB24(): Bitrix24
     {
-        include_once "b24_restapi_const.php";
         $database = new Database($this->getLunaPdo());
         $appData = new \conta\B24RestApi\AppData\AppData();
         return \conta\B24RestApi\Bitrix24Factory\Bitrix24Factory
-            ::make($appData, $database, APP_REG_URL);
+            ::make($appData, $database, $this->appRegUrl);
     }
 
     public function getCommands(): array
@@ -112,6 +120,16 @@ abstract class Request
     public function getProjectRoot(): string
     {
         return $this->projectRoot;
+    }
+
+    public function getTokenParametersArray(): array
+    {
+        return [
+            'domain' => $this->domain,
+            'appId' => $this->appId,
+            'appSecretCode' => $this->appSecretCode,
+            'appRegUrl' => $this->appRegUrl
+        ];
     }
 
     /**
@@ -177,5 +195,14 @@ abstract class Request
         } catch(\PDOException $e) {
             echo 'Error: ' . $e->getMessage() . '<br>';
         }
+    }
+
+    private function setB24Setting(): void
+    {
+        include_once "b24_restapi_const.php";
+        $this->appRegUrl = APP_REG_URL;
+        $this->appId = APP_ID;
+        $this->appSecretCode = APP_SECRET_CODE;
+        $this->domain = DOMAIN;
     }
 }

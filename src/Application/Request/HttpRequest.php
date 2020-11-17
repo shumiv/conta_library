@@ -10,8 +10,17 @@ class HttpRequest extends Request
 
     public function init(): void
     {
+        $this->startSession();
         $this->properties = $_REQUEST; //todo: POST/GET/PUT
         $requestUri = $_SERVER['REQUEST_URI'];
         $this->commands = $this->composeCommands($requestUri);
+    }
+
+    private function startSession(): void
+    {
+        if (session_name() !== $this->appSecretCode)  {
+            session_name($this->appSecretCode);
+        }
+        session_start();
     }
 }

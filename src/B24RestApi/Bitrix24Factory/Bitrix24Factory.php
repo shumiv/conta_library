@@ -23,7 +23,7 @@ class Bitrix24Factory
     {
         $b24App = new Bitrix24(false, null);
         $b24App
-            ->setApplicationScope(explode(',', $data['scope']));
+                ->setApplicationScope(explode(',', $data['scope']));
         $b24App->setApplicationId($data['app_id']);
         $b24App->setApplicationSecret($data['app_secret_code']);
         $b24App->setDomain($data['domain']);
